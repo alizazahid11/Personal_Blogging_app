@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Blogging App</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color:rgb(248, 246, 246);
+  }
+  .navbar {
+    background-color: rgb(87, 9, 231);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px ;
+    width: 100%; /* Set the desired width */
+  }
+  .navbar h1 {
+    color: white;
+    margin: 0;
+    font-size: 20px;
+    margin-left: 85px;
+  }
+  .login-name {
+    color: white;
+    font-weight: bold;
+    margin-left: 1200px;
+    cursor: pointer;
+    position: absolute;
+  }
+  h2{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 40px;
+margin-left: 100px;
+  }
+  .dotted-line {
+    border-top: 1px dotted black;
+  }
+
+   .signup-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin-left: 500px;
+    margin-top: 80px;
+    height:200px
+  }
+  .signup-input {
+    width: 60%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #e6e2e2;
+    border-radius: 5px;
+    margin-left: 80px;
+     transition: border-color 0.3s ease-in-out;
+  }
+  .signup-button {
+    width: 30%;
+    padding: 10px;
+    background-color:rgb(87, 9, 231);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+     margin-left: 140px;
+     margin-top: 20px;
+  }
+  .signup-input:focus {
+    outline: none;
+    border-color:rgb(87, 9, 231);
+    box-shadow: 0 0 3px rgb(87, 9, 231);
+  }
+
+
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>Personal Blogging App</h1>
+    <div class="login-name"><a href="./signup.html" style="text-decoration:none; color:white">signup</a></div>
+  </div>
+  <h2>Login</h2>
+<div class="dotted-line"></div>
+ <div class="signup-container">
+
+    <input class="signup-input" type="email" id ="email"placeholder="Email">
+    <input class="signup-input" type="password" id="password"placeholder="Password">
+    <button class="signup-button" onclick="logIn()">Login</button>
+  </div>
+   <!-- Add Firebase JavaScript SDK -->
+   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+ 
+   <script type="text/javascript">
+   const firebaseConfig = {
+    apiKey: "AIzaSyCtrX532oOTWpmrxLXzhKA5sVe8KZqmK4g",
+    authDomain: "mini-hackathon-2.firebaseapp.com",
+    databaseURL: "https://mini-hackathon-2-default-rtdb.firebaseio.com",
+    projectId: "mini-hackathon-2",
+    storageBucket: "mini-hackathon-2.appspot.com",
+    messagingSenderId: "333510787925",
+    appId: "1:333510787925:web:9fbd3bf852f1d6d17e65dc",
+    measurementId: "G-Z60BFGNT00"
+  };
+   // Initialize Firebase
+   firebase.initializeApp(firebaseConfig);
+    // Initialize Realtime Database and get a 
+    function logIn() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                    var user = userCredential.user;
+                    console.log('User signed in successfully... \n', user);
+                    window.location.href = './dashboard.html';
+
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log("Login error:", errorCode, errorMessage);
+            });
+    }
+
+    function writeUserData(userId, email, password) {
+      firebase.database().ref('users/' + userId).set({
+        userId: userId,
+        email: email,
+        password: password
+      });
+    }
+   </script>
+
+  </body>
+  </html>

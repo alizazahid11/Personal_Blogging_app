@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Blogging App</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+  }
+  .navbar {
+    background-color: rgb(87, 9, 231);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px ;
+    width: 100%; /* Set the desired width */
+  }
+  .navbar h1 {
+    color: white;
+    margin: 0;
+    font-size: 20px;
+    margin-left: 85px;
+  }
+  .login-name {
+    color: white;
+    font-weight: bold;
+    margin-left: 1200px;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  .dotted-line {
+    border-top: 1px dotted black;
+  }
+  h2{
+    font-size: 30px;
+    margin-left: 100px;
+ 
+  }
+.hh{
+    background-color: rgb(240, 241, 241);
+}
+h3{
+    font-size: 30px;
+    margin-left: 110px;
+}
+.profile-container {
+    background-color: white;
+    padding: 70px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    text-align: center;
+    margin-left: 100px;
+    margin-top: 30px;
+  }
+  .profile-image {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    margin: 0 auto 10px;
+  }
+  .edit-icon {
+    color: rgb(87, 9, 231);
+    cursor: pointer;
+margin-left: 90%;
+margin-top: -25px;
+  }
+  .profile-name {
+    font-size: 18px;
+    margin: 0;
+    margin-right: 85%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .password-heading {
+    font-size: 18px;
+    margin-top: -10px;
+    left: 85px;
+position: absolute;
+margin-bottom: 50px;
+  }
+  .password-form {
+    width: 300px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 900px;
+    margin-top: 20px;
+  
+  }
+  .update-button {
+    width: 20%;
+    padding: 10px;
+    background-color:rgb(87, 9, 231);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 700px;
+  }
+  .password-form:focus {
+    outline: none;
+    border-color:rgb(87, 9, 231);
+    box-shadow: 0 0 3px rgb(87, 9, 231);
+  }
+
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>Personal Blogging App</h1>
+    <div class="login-name"><a href="./login.html" style="text-decoration:none; color:white">Login</a></div>
+  </div>
+  <h2>Profile</h2>
+ <div class="hh"><div class="dotted-line"></div>
+ <div class="profile-container">
+    <img class="profile-image" src="profile-image.jpg" alt="Profile Image">
+    <div class="edit-icon">&#9998;</div>
+    <h2 class="profile-name">User Name  <div class="edit-icon">&#9998;</div></h2>
+  
+    <h2 class="password-heading"> Password</h2>
+    <input class="password-form" type="password" placeholder="Old Password">
+    <br> <input class="password-form" type="password" placeholder="New Password">
+    <br>   <input class="password-form" type="password" placeholder="Repeat Password">
+    <button class="update-button">Update Password</button>
+  </div>
