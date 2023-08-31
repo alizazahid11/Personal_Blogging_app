@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="">
+
 <title>Personal Blogging App</title>
 <style>
 body {
@@ -138,20 +140,21 @@ margin-right: 300px;
     <h1>Personal Blogging App</h1>
     <div class="login-name"><a href="./login.html" style="text-decoration:none; color:white; cursor: pointer;">Logout</a></div>
     <div class="login-name"><a href="./profile.html" style="text-decoration:none; color:white; margin-left:-80px;">profile</a></div>
+    <div id="username" style="margin-left: 870px; color: #fff;"></div>
   </div>
   <h2>Dashboard</h2>
  <div class="hh"><div class="dotted-line"></div>
- <div class="blog-form">
+ <div class="blog-form" id="blogForm">
     <input class="form-input" type="text" placeholder="Title">
     <textarea class="description-box" placeholder="What is on your mind"></textarea>
-    <button class="publish-button">Publish Blog</button>
+    <button class="publish-button" id="publish-button">Publish Blog</button>
   </div>
   <h2>My Blogs</h2>
-  <div class="blog-post">
+  <div class="blog-post" id="blogPosts">
     <img class="blog-image" src="" alt="Blog Image">
-    <h2 class="blog-title">Blog Title</h2>
-    <p class="blog-info">Author Name - Date</p>
-    <p class="blog-description">
+    <h2 class="blog-title" id="blogTitle">Blog Title</h2>
+    <p class="blog-info" id="userFullName">Author Name - Date</p>
+    <p class="blog-description" id="blogBody">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel ante nec ex vehicula blandit vel at nulla.
     </p>
     </div>
@@ -180,26 +183,30 @@ margin-right: 300px;
                 </p>
                 </div>
                 <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+<!-- <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script> -->
 <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase.js"></script>
+
 <script type="text/javascript">
-const firebaseConfig = {
-    apiKey: "AIzaSyCtrX532oOTWpmrxLXzhKA5sVe8KZqmK4g",
-    authDomain: "mini-hackathon-2.firebaseapp.com",
-    databaseURL: "https://mini-hackathon-2-default-rtdb.firebaseio.com",
-    projectId: "mini-hackathon-2",
-    storageBucket: "mini-hackathon-2.appspot.com",
-    messagingSenderId: "333510787925",
-    appId: "1:333510787925:web:9fbd3bf852f1d6d17e65dc",
-    measurementId: "G-Z60BFGNT00"
-  };
-   // Initialize Firebase
-   firebase.initializeApp(firebaseConfig);
+// const firebaseConfig = {
+//     apiKey: "AIzaSyCtrX532oOTWpmrxLXzhKA5sVe8KZqmK4g",
+//     authDomain: "mini-hackathon-2.firebaseapp.com",
+//     databaseURL: "https://mini-hackathon-2-default-rtdb.firebaseio.com",
+//     projectId: "mini-hackathon-2",
+//     storageBucket: "mini-hackathon-2.appspot.com",
+//     messagingSenderId: "333510787925",
+//     appId: "1:333510787925:web:9fbd3bf852f1d6d17e65dc",
+//     measurementId: "G-Z60BFGNT00"
+//   };
+//    // Initialize Firebase
+//    firebase.initializeApp(firebaseConfig);
     // Initialize Realtime Database and get a reference to the service
-    const database = firebase.database();
+
     </script>
+    
+    <script src="./firebaseConfig.js"></script>
     <script src="./dashboard.js"></script>
- 
  
 
 </div>
