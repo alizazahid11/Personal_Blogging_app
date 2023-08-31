@@ -35,9 +35,10 @@ blogsRef.on("value", (snapshot) => {
         <p><em><b>${userElement.getAttribute("data-username")} - ${post.date}</b></em></p>
         <p>${post.body}</p>
         
-        <button class="updateBtn">Update</button>
-        <button class="deleteBtn">Delete</button>
-      </div>`;
+        
+        <button class="deleteBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Delete</button>
+        <button class="updateBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Edit</button>
+        </div>`;
     blogPostsElement.appendChild(blogDiv);
 
     const deleteBtn = blogDiv.querySelector(".deleteBtn");
