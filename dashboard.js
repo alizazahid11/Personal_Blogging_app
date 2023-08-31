@@ -1,96 +1,4 @@
-// // Detect changes in user authentication state
-// firebase.auth().onAuthStateChanged(function(user) {
-//     if (user) {
-//       // User is signed in, fetch and display the user's username
-//       fetchUsernameFromDatabase(user.uid).then(function(username) {
-//         document.getElementById("nav-user").innerHTML = username;
-//       }).catch(function(error) {
-//         console.error("Error fetching username:", error);
-//         document.getElementById("nav-user").innerHTML = "Guest";
-//       });
-//     } else {
-//       // User is signed out, update the navigation bar accordingly
-//       document.getElementById("nav-user").innerHTML = "Guest";
-//     }
-//   });
-  
-//   // Function to fetch the user's username from the Realtime Database
-//   function fetchUsernameFromDatabase(uid) {
-//     return firebase.database().ref('users/' + uid).once('value').then(function(snapshot) {
-//       return snapshot.val().username;
-//     });
-//   }
 
-
-  // Reference to Firestore collection
-// const blogsRef = firebase.firestore().collection('blog-post');
-
-// // Function to publish a blog
-// function publishBlog() {
-//     const title = document.getElementById('blog-title').value;
-//     const description = document.getElementById('blog-description').value;
-
-//     // Add the blog to Firestore
-//     blogsRef.add({
-//         title: title,
-//         description: description
-//     }).then(() => {
-//         console.log('Blog published successfully.');
-//         // Clear the form fields
-//         document.getElementById('blog-title').value = '';
-//         document.getElementById('blog-description').value = '';
-//         // Fetch and display blogs
-//         fetchAndDisplayBlogs();
-//     }).catch(error => {
-//         console.error('Error publishing blog:', error);
-//     });
-// }
-
-// // Function to fetch and display blogs
-// function fetchAndDisplayBlogs() {
-//     blogsRef.get().then(querySnapshot => {
-//         const blogsContainer = document.getElementById('blogs-container');
-//         blogsContainer.innerHTML = ''; // Clear previous content
-//    // In the fetchAndDisplayBlogs function
-// querySnapshot.forEach(doc => {
-//     const blogData = doc.data();
-//     const blogElement = document.createElement('div');
-//     blogElement.classList.add('blog-post');
-//     blogElement.innerHTML = `
-//         <h2>${blogData.title}</h2>
-//         <p>${blogData.description}</p>
-//     `;
-//     blogsContainer.appendChild(blogElement);
-// });
-//     }).catch(error => {
-//         console.error('Error fetching blogs:', error);
-//     });
-// }
-// function publishBlog() {
-//     const title = document.getElementById('blog-title').value;
-//     const description = document.getElementById('blog-description').value;
-
-//     // Create a new blog post element
-//     const blogPost = document.createElement('div');
-//     blogPost.classList.add('blog-post');
-//     blogPost.innerHTML = `
-//         <h2>${title}</h2>
-//         <p>${description}</p>
-//     `;
-
-//     // Append the blog post to the container
-//     const blogsContainer = document.getElementById('blogs-container');
-//     blogsContainer.appendChild(blogPost);
-
-//     // Clear the input fields
-//     document.getElementById('blog-title').value = '';
-//     document.getElementById('blog-description').value = '';
-// }
-
-// // Attach the event listener after DOM is loaded
-// document.addEventListener('DOMContentLoaded', function() {
-//     document.getElementById('publish-button').addEventListener('click', publishBlog);
-// });
 
 const app = firebase.initializeApp(firebaseConfig);
 
@@ -124,8 +32,9 @@ blogsRef.on("value", (snapshot) => {
     blogDiv.innerHTML = `
       <div class="div-post">
         <h3>${post.title}</h3>
+        <p><em><b>${userElement.getAttribute("data-username")} - ${post.date}</b></em></p>
         <p>${post.body}</p>
-        <p><em>Published on: ${post.date}</em></p>
+        
         <button class="updateBtn">Update</button>
         <button class="deleteBtn">Delete</button>
       </div>`;
@@ -133,12 +42,13 @@ blogsRef.on("value", (snapshot) => {
 
     const deleteBtn = blogDiv.querySelector(".deleteBtn");
     deleteBtn.addEventListener("click", () => {
+        
       const confirmDelete = confirm(
         "Are you sure you want to delete this blog?"
       );
       if (confirmDelete) {
-        // Delete logic here
-        alert("Blog deleted");
+        
+        alert("BLOG DELETED");
       }
     });
 
@@ -154,6 +64,7 @@ blogsRef.on("value", (snapshot) => {
     blogPostsElement.innerHTML = "No blog data found.";
   }
 });
+
 
 // Submit blog form
 blogForm.addEventListener("submit", async (event) => {
@@ -226,10 +137,13 @@ try {
     if (storedUsername) {
       const user = JSON.parse(storedUsername);
       userElement.innerHTML = user.username;
+      userElement.setAttribute("data-username", user.username); 
     } else {
       userElement.innerHTML = "Guest"; // Default if no user data is stored
+      userElement.setAttribute("data-username", "Guest");
     }
   } catch (error) {
     console.error('Error parsing stored user data:', error);
     userElement.innerHTML = "Guest"; // Default if there's an error
+    userElement.setAttribute("data-username", "Guest"); 
   }
