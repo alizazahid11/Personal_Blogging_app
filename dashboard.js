@@ -1,5 +1,4 @@
 
-
 const app = firebase.initializeApp(firebaseConfig);
 
 const loggedInUser = {
@@ -29,6 +28,7 @@ blogsRef.on("value", (snapshot) => {
   blogPosts.forEach((post) => {
     const blogDiv = document.createElement("div");
     blogDiv.classList.add("blog");
+    
     blogDiv.innerHTML = `
       <div class="div-post">
         <h3>${post.title}</h3>
@@ -90,11 +90,44 @@ blogForm.addEventListener("submit", async (event) => {
     console.error("Error adding document: ", error);
   }
 });
-document.addEventListener('DOMContentLoaded', function() {
-// Select the publish button element
-const publishButton = document.getElementById('publish-button');
+// document.addEventListener('DOMContentLoaded', function() {
+// // Select the publish button element
+// const publishButton = document.getElementById('publish-button');
 
-if (publishButton) {
+
+// let stored = sessionStorage.getItem('userName');/
+let storedUsername = sessionStorage.getItem('user')
+console.log('storedUsername', storedUsername);
+let userElement = document.getElementById('username');
+// userElement.innerHTML = JSON.parse(storedUsername).username;
+// // console.log(storedUsername);
+document.addEventListener('DOMContentLoaded', function() {
+    const userElement = document.getElementById('username');
+    const publishButton = document.getElementById('publish-button');
+  
+    if (userElement) {
+      let storedUsername = sessionStorage.getItem('user');
+      console.log('storedUsername', storedUsername);
+  
+try {
+    if (storedUsername) {
+      const user = JSON.parse(storedUsername);
+      console.log('Parsed user:', user);
+      userElement.innerHTML = user.username;
+      userElement.setAttribute("data-username", user.username); 
+    } else {
+      userElement.innerHTML = "Guest"; // Default if no user data is stored
+      userElement.setAttribute("data-username", "Guest");
+    }
+  } catch (error) {
+    console.error('Error parsing stored user data:', error);
+    userElement.innerHTML = "Guest"; // Default if there's an error
+    userElement.setAttribute("data-username", "Guest"); 
+  }
+} else {
+    console.error("Username element not found.");
+  }
+  if (publishButton) {
     console.log("Adding event listener to publishButton.");
     publishButton.addEventListener('click', publishBlog);
 } else {
@@ -128,23 +161,3 @@ function publishBlog() {
       });
 }
 });
-// let stored = sessionStorage.getItem('userName');/
-let storedUsername = sessionStorage.getItem('user')
-console.log('storedUsername', storedUsername);
-let userElement = document.getElementById('username');
-// userElement.innerHTML = JSON.parse(storedUsername).username;
-// // console.log(storedUsername);
-try {
-    if (storedUsername) {
-      const user = JSON.parse(storedUsername);
-      userElement.innerHTML = user.username;
-      userElement.setAttribute("data-username", user.username); 
-    } else {
-      userElement.innerHTML = "Guest"; // Default if no user data is stored
-      userElement.setAttribute("data-username", "Guest");
-    }
-  } catch (error) {
-    console.error('Error parsing stored user data:', error);
-    userElement.innerHTML = "Guest"; // Default if there's an error
-    userElement.setAttribute("data-username", "Guest"); 
-  }
