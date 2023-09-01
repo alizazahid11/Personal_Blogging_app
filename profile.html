@@ -120,21 +120,26 @@ margin-bottom: 50px;
   </div>
   <h2>Profile</h2>
  <div class="hh"><div class="dotted-line"></div>
- <div class="profile-container">
-    <img class="profile-image" src="profile-image.jpg" alt="Profile Image">
-    <div class="edit-icon">&#9998;</div>
-    <h2 class="profile-name">User Name  <div class="edit-icon">&#9998;</div></h2>
+ <div class="profile-container" id="profile-form">
+    <img class="profile-image" id="photo-input"  >
+    <div class="edit-icon" id="edit-photo">&#9998;</div>
+    <h2 class="profile-name" id="profile-name">User Name  <div class="edit-icon"id="edit-icon">&#9998;</div></h2>
   
     <h2 class="password-heading"> Password</h2>
-    <input class="password-form" type="password" placeholder="Old Password">
+    <input class="password-form" id="password-form"type="password" placeholder="Old Password">
     <br> <input class="password-form" type="password" placeholder="New Password">
     <br>   <input class="password-form" type="password" placeholder="Repeat Password">
     <button class="update-button">Update Password</button>
   </div>
+   
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script> -->
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-storage.js"></script>
-  <script>
+ 
+  <!-- <script>
   const firebaseConfig = {
     apiKey: "AIzaSyCtrX532oOTWpmrxLXzhKA5sVe8KZqmK4g",
     authDomain: "mini-hackathon-2.firebaseapp.com",
@@ -145,5 +150,6 @@ margin-bottom: 50px;
     appId: "1:333510787925:web:9fbd3bf852f1d6d17e65dc",
     measurementId: "G-Z60BFGNT00"
   };
-  firebase.initializeApp(firebaseConfig);</script>
+  firebase.initializeApp(firebaseConfig);</script> -->
+  <script src="./firebaseConfig.js"></script>
   <script src="./profile.js"></script>
