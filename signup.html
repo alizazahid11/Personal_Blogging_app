@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <title>Personal Blogging App</title>
 <style>
   body {
@@ -76,7 +77,26 @@ margin-left: 100px;
     box-shadow: 0 0 3px rgb(87, 9, 231);
   }
 
+  .icon-container1 {
+      position: absolute;
+      right: 520px;
+      bottom: 170px;
 
+    }
+
+    .icon-container1 i {
+      color: #999;
+    }
+    .iconss {
+      position: absolute;
+      right: 520px;
+      bottom: 115px;
+
+    }
+
+    .iconss i {
+      color: #999;
+    }
 </style>
 </head>
 <body>
@@ -91,8 +111,12 @@ margin-left: 100px;
     <input class="signup-input" type="text" id="username" placeholder="First Name">
     <input class="signup-input" type="text"id="lastname" placeholder="Last Name">
     <input class="signup-input" type="email" id ="email"placeholder="Email">
-    <input class="signup-input" type="password" id="password"placeholder="Password">
-    <input class="signup-input" type="password"id="repeatpass" placeholder="Repeat Password">
+    <input class="signup-input" type="password" id="password"placeholder="Password"> <div class="icon-container1">
+      <i class="fas fa-eye" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+    </div>
+    <input class="signup-input" type="password"id="repeatpass" placeholder="Repeat Password"><div class="iconss">
+      <i class="fas fa-eye" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+    </div>
     <button class="signup-button" onclick="signup()">Sign Up</button>
     
 
@@ -162,6 +186,20 @@ function displayUsername(uid) {
         document.getElementById("nav-user").textContent = "Welcome, " + username + "!";
     });
 }
+function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("password");
+      var toggleIcon = document.getElementById("togglePassword");
+      
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+      }
+    }
 
   </script>
   

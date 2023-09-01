@@ -19,18 +19,24 @@ const firstNameInput = document.getElementById("profile-name");
 const passwordInput = document.getElementById("password-form");
 const editNameIcon = document.getElementById("edit-icon");
 const editPhotoIcon = document.getElementById("edit-photo");
-const repeatPasswordInput = document.getElementById("repeat-password-form"); 
+const repeatPasswordInput = document.getElementById("repeat-password-form");
+const errorMessage = document.getElementById("error-message");
 
 // Function to update profile information
 profileForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   // Check if the new password and repeat password match
   const newPassword = passwordInput.value;
-  const repeatPassword = repeatPasswordInput.value; // Get the value of the repeat password input
-
+  const repeatPassword = repeatPasswordInput.value;
+  
   if (newPassword !== repeatPassword) {
-    alert("New password and repeat password do not match.");
-    return; 
+    // Display an error message
+    errorMessage.textContent = "New password and repeat password do not match.";
+    alert("Passwords don't match!");
+    return; // Prevent further execution
+  } else {
+    // Clear any previous error message
+    errorMessage.textContent = "";
   }
 
   // Update profile photo
@@ -45,23 +51,22 @@ profileForm.addEventListener("submit", async (e) => {
 
   // Update first name, last name, and password
   const firstName = firstNameInput.value;
-  
+
   // Update user information in the database
   const user = firebase.auth().currentUser;
   if (user) {
     const userId = user.uid;
 
-    // Update the password in the Realtime Database
+    // Update the password and repeatPassword in the Realtime Database
     database.ref(`users/${userId}`).update({
-      password: newPassword,
-      repeatPassword: repeatPassword,
+      newpassword: newPassword,
+      repeatnewPass: repeatPassword,
       // Add other user information here if needed
     });
 
     // Clear password input for security
     passwordInput.value = "";
     repeatPasswordInput.value = "";
-
 
     alert("Profile updated successfully!");
   } else {
@@ -120,10 +125,11 @@ updatePasswordButton.addEventListener("click", async () => {
       // Update the password
       await user.updatePassword(newPassword);
 
-      // Update the password in the Realtime Database
+      // Update the password and repeatPassword in the Realtime Database
       const userId = user.uid;
       database.ref(`users/${userId}`).update({
-        password: newPassword,
+        newpassword: newPassword,
+        repeatnewPass: newPassword, // Update repeatPassword to match newPassword
         // Add other user information here if needed
       });
 
