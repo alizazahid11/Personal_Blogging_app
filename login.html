@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <title>Personal Blogging App</title>
 <style>
   body {
@@ -75,7 +76,17 @@ margin-left: 100px;
     border-color:rgb(87, 9, 231);
     box-shadow: 0 0 3px rgb(87, 9, 231);
   }
+  .iconss {
+      position: absolute;
+      right: 520px;
+      bottom: 250px;
+      cursor: pointer;
 
+    }
+
+    .iconss i {
+      color: #999;
+    }
 
 </style>
 </head>
@@ -89,7 +100,9 @@ margin-left: 100px;
  <div class="signup-container">
 
     <input class="signup-input" type="email" id ="email"placeholder="Email">
-    <input class="signup-input" type="password" id="password"placeholder="Password">
+    <input class="signup-input" type="password" id="password"placeholder="Password"><div class="iconss">
+      <i class="fas fa-eye" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+    </div>
     <button class="signup-button" onclick="logIn()">Login</button>
   </div>
    <!-- Add Firebase JavaScript SDK -->
@@ -134,6 +147,20 @@ margin-left: 100px;
         email: email,
         password: password
       });
+    }
+    function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("password");
+      var toggleIcon = document.getElementById("togglePassword");
+      
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+      }
     }
    </script>
 
