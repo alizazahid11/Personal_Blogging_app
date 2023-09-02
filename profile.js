@@ -5,6 +5,37 @@ const storage = firebase.storage();
 const database = firebase.database(); // Reference to Firebase Realtime Database
 
 
+// // Check user's sign-in status on page load
+// firebase.auth().onAuthStateChanged((user) => {
+//   if (user) {
+//     // User is signed in, you can now update their password or perform other actions
+//     // Load the user's name from the database and update the profile name element
+//     const userId = user.uid;
+//     const profileNameElement = document.getElementById('profile-name');
+//     const profilePictureElement = document.getElementById('profile-picture'); // Assuming you have an image element for displaying the profile picture
+//     // Retrieve the user's name from the database
+//     database.ref(`users/${userId}/username`).once('value')
+//       .then((snapshot) => {
+//         const username = snapshot.val();
+//         if (username) {
+//           // Update the displayed name
+//           profileNameElement.textContent = username;
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching username: " + error.message);
+//       });
+//   } 
+//   const profilePictureURL = sessionStorage.getItem('profilePictureURL');
+//   if (profilePictureURL) {
+//     // Display the profile picture
+//     profilePictureElement.src = profilePictureURL;
+//   }
+// }
+//   else {
+//     // User is not signed in, handle this case accordingly
+//   }
+// });
 // Check user's sign-in status on page load
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
@@ -12,6 +43,7 @@ firebase.auth().onAuthStateChanged((user) => {
     // Load the user's name from the database and update the profile name element
     const userId = user.uid;
     const profileNameElement = document.getElementById('profile-name');
+    const profilePictureElement = document.getElementById('photo-input'); // Assuming you have an image element for displaying the profile picture
 
     // Retrieve the user's name from the database
     database.ref(`users/${userId}/username`).once('value')
@@ -25,6 +57,13 @@ firebase.auth().onAuthStateChanged((user) => {
       .catch((error) => {
         console.error("Error fetching username: " + error.message);
       });
+
+    // Retrieve the profile picture URL from sessionStorage
+    const profilePictureURL = sessionStorage.getItem('profilePictureURL');
+    if (profilePictureURL) {
+      // Display the profile picture
+      profilePictureElement.src = profilePictureURL;
+    }
   } else {
     // User is not signed in, handle this case accordingly
   }
@@ -94,77 +133,7 @@ profileForm.addEventListener("submit", async (e) => {
   }
 });
 
-// // Add an event listener to the edit name icon
-// editNameIcon.addEventListener("click", () => {
-//   // Show a form or modal for editing the name
-//   const newName = prompt("Enter your new name:");
-//   if (newName !== null) {
-//     // Update the displayed name and send it to the database
-//     firstNameInput.textContent = newName;
-//     // You should also send the new name to the database here
-//   }
-// });
-// Add an event listener to the edit name icon
-// editNameIcon.addEventListener("click", () => {
-//   // Show a form or modal for editing the name
-//   const newName = prompt("Enter your new name:");
-//   if (newName !== null) {
-//     // Update the displayed name
-//     firstNameInput.value = newName;
 
-//     // Update the new name in the Realtime Database
-//     const user = firebase.auth().currentUser;
-//     if (user) {
-//       const userId = user.uid;
-
-//       // Update the name in the Realtime Database
-//       firebase.database().ref(`users/${userId}`).update({
-//         username: newName, // Assuming 'username' is the field in your database for storing the name
-//       })
-//       .then(() => {
-//         alert("Name updated successfully!");
-//       })
-//       .catch((error) => {
-//         alert("Error updating name: " + error.message);
-//       });
-//     } else {
-//       alert("User is not signed in.");
-//     }
-//   }
-// });
-
-// // Add an event listener to the edit name icon
-// editNameIcon.addEventListener("click", () => {
-//   // Show a form or modal for editing the name
-//   const newName = prompt("Enter your new name:");
-//   if (newName !== null) {
-//     // Update the displayed name
-//     firstNameInput.value = newName;
-
-//     // Update the new name in the Realtime Database
-//     const user = firebase.auth().currentUser;
-//     if (user) {
-//       const userId = user.uid;
-
-//       // Update the name in the Realtime Database
-//       firebase.database().ref(`users/${userId}`).update({
-//         username: newName, // Assuming 'username' is the field in your database for storing the name
-//       })
-//       .then(() => {
-//         alert("Name updated successfully!");
-       
-//         // Update the displayed name with the new name
-//         firstNameInput.value = newName;
-      
-//       })
-//       .catch((error) => {
-//         alert("Error updating name: " + error.message);
-//       });
-//     } else {
-//       alert("User is not signed in.");
-//     }
-//   }
-// });
 // Add an event listener to the edit name icon
 editNameIcon.addEventListener("click", () => {
   // Show a form or modal for editing the name
@@ -200,7 +169,6 @@ editNameIcon.addEventListener("click", () => {
   }
 });
 
-
 // Add an event listener to the edit photo icon
 editPhotoIcon.addEventListener("click", () => {
   // Create an input element for file upload
@@ -208,19 +176,59 @@ editPhotoIcon.addEventListener("click", () => {
   fileInput.type = "file";
 
   // Add an event listener to the file input
-  fileInput.addEventListener("change", (event) => {
+  fileInput.addEventListener("change", async (event) => {
     const photoFile = event.target.files[0];
 
     if (photoFile) {
-      // Read the selected image file and display it in the browser
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const newImageUrl = e.target.result;
-        photoInput.src = newImageUrl;
-      };
-      reader.readAsDataURL(photoFile);
+      try {
+        // Create a storage reference to the profile photo using the user's UID as the filename
+        const storageRef = storage.ref(`profile_photos/${firebase.auth().currentUser.uid}`);
+        
+        // Upload the selected image file to Firebase Storage
+        const uploadTask = storageRef.put(photoFile);
 
-      // You can also update the profile image in the database here
+        // Listen for state changes, errors, and completion of the upload
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Handle upload progress (if needed)
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(`Upload is ${progress}% complete`);
+          },
+          (error) => {
+            // Handle unsuccessful uploads (if needed)
+            console.error("Error uploading profile photo: ", error);
+          },
+          async () => {
+            // Handle successful upload
+            console.log("Profile photo uploaded successfully");
+            
+            // Get the download URL for the uploaded image
+            const downloadURL = await storageRef.getDownloadURL();
+
+            // Update the user's profile photo URL in your Firebase Realtime Database
+            const user = firebase.auth().currentUser;
+            if (user) {
+              const userId = user.uid;
+
+              // Update the profile photo URL in the Realtime Database
+              database.ref(`users/${userId}`).update({
+                profilePhotoURL: downloadURL, // Store the download URL in the database
+              });
+
+              // Update the displayed profile photo (if needed)
+              photoInput.src = downloadURL;
+              sessionStorage.setItem('profilePictureURL', downloadURL);
+              
+              alert("Profile photo updated successfully!");
+            } else {
+              alert("User is not signed in.");
+            }
+          }
+        );
+      } catch (error) {
+        console.error("Error handling profile photo: " + error.message);
+      }
     }
   });
 
