@@ -4,14 +4,32 @@ const app = firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const database = firebase.database(); // Reference to Firebase Realtime Database
 
+
 // Check user's sign-in status on page load
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     // User is signed in, you can now update their password or perform other actions
+    // Load the user's name from the database and update the profile name element
+    const userId = user.uid;
+    const profileNameElement = document.getElementById('profile-name');
+
+    // Retrieve the user's name from the database
+    database.ref(`users/${userId}/username`).once('value')
+      .then((snapshot) => {
+        const username = snapshot.val();
+        if (username) {
+          // Update the displayed name
+          profileNameElement.textContent = username;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching username: " + error.message);
+      });
   } else {
     // User is not signed in, handle this case accordingly
   }
 });
+
 
 const profileForm = document.getElementById("profile-form");
 const photoInput = document.getElementById("photo-input");
@@ -21,6 +39,8 @@ const editNameIcon = document.getElementById("edit-icon");
 const editPhotoIcon = document.getElementById("edit-photo");
 const repeatPasswordInput = document.getElementById("repeat-password-form");
 const errorMessage = document.getElementById("error-message");
+// Add an event listener to the edit name icon
+
 
 // Function to update profile information
 profileForm.addEventListener("submit", async (e) => {
@@ -74,16 +94,112 @@ profileForm.addEventListener("submit", async (e) => {
   }
 });
 
+// // Add an event listener to the edit name icon
+// editNameIcon.addEventListener("click", () => {
+//   // Show a form or modal for editing the name
+//   const newName = prompt("Enter your new name:");
+//   if (newName !== null) {
+//     // Update the displayed name and send it to the database
+//     firstNameInput.textContent = newName;
+//     // You should also send the new name to the database here
+//   }
+// });
+// Add an event listener to the edit name icon
+// editNameIcon.addEventListener("click", () => {
+//   // Show a form or modal for editing the name
+//   const newName = prompt("Enter your new name:");
+//   if (newName !== null) {
+//     // Update the displayed name
+//     firstNameInput.value = newName;
+
+//     // Update the new name in the Realtime Database
+//     const user = firebase.auth().currentUser;
+//     if (user) {
+//       const userId = user.uid;
+
+//       // Update the name in the Realtime Database
+//       firebase.database().ref(`users/${userId}`).update({
+//         username: newName, // Assuming 'username' is the field in your database for storing the name
+//       })
+//       .then(() => {
+//         alert("Name updated successfully!");
+//       })
+//       .catch((error) => {
+//         alert("Error updating name: " + error.message);
+//       });
+//     } else {
+//       alert("User is not signed in.");
+//     }
+//   }
+// });
+
+// // Add an event listener to the edit name icon
+// editNameIcon.addEventListener("click", () => {
+//   // Show a form or modal for editing the name
+//   const newName = prompt("Enter your new name:");
+//   if (newName !== null) {
+//     // Update the displayed name
+//     firstNameInput.value = newName;
+
+//     // Update the new name in the Realtime Database
+//     const user = firebase.auth().currentUser;
+//     if (user) {
+//       const userId = user.uid;
+
+//       // Update the name in the Realtime Database
+//       firebase.database().ref(`users/${userId}`).update({
+//         username: newName, // Assuming 'username' is the field in your database for storing the name
+//       })
+//       .then(() => {
+//         alert("Name updated successfully!");
+       
+//         // Update the displayed name with the new name
+//         firstNameInput.value = newName;
+      
+//       })
+//       .catch((error) => {
+//         alert("Error updating name: " + error.message);
+//       });
+//     } else {
+//       alert("User is not signed in.");
+//     }
+//   }
+// });
 // Add an event listener to the edit name icon
 editNameIcon.addEventListener("click", () => {
   // Show a form or modal for editing the name
   const newName = prompt("Enter your new name:");
   if (newName !== null) {
-    // Update the displayed name and send it to the database
-    firstNameInput.textContent = newName;
-    // You should also send the new name to the database here
+    // Update the displayed name
+    firstNameInput.value = newName;
+
+    // Update the new name in the Realtime Database
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const userId = user.uid;
+
+      // Update the name in the Realtime Database
+      firebase.database().ref(`users/${userId}`).update({
+        username: newName, // Assuming 'username' is the field in your database for storing the name
+      })
+      .then(() => {
+        alert("Name updated successfully!");
+
+        // Update the displayed name with the new name
+        const profileNameElement = document.getElementById('profile-name');
+        if (profileNameElement) {
+          profileNameElement.textContent = newName;
+        }
+      })
+      .catch((error) => {
+        alert("Error updating name: " + error.message);
+      });
+    } else {
+      alert("User is not signed in.");
+    }
   }
 });
+
 
 // Add an event listener to the edit photo icon
 editPhotoIcon.addEventListener("click", () => {

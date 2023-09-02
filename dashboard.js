@@ -1,71 +1,142 @@
 
 const app = firebase.initializeApp(firebaseConfig);
 
-const loggedInUser = {
-  fullName: "John Doe",
-  id: "user123", // Replace with actual user ID
-};
 
+let username = "";
 const database = firebase.database();
 const blogsRef = database.ref("blogs");
 
 const userFullNameElement = document.getElementById("userFullName");
 const blogForm = document.getElementById("blogForm");
 const blogPostsElement = document.getElementById("blogPosts");
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    // User is signed in, you can now update their password or perform other actions
+    // Load the user's name from the database and update the profile name element
+    const userId = user.uid;
+    const userElement = document.getElementById('username');
+
+    // Retrieve the user's name from the database
+    database.ref(`users/${userId}/username`).once('value')
+      .then((snapshot) => {
+        const username = snapshot.val();
+        if (username) {
+          // Update the displayed name
+          userElement.textContent = username;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching username: " + error.message);
+      });
+  } else {
+    // User is not signed in, handle this case accordingly
+  }
+});
+// Listen for data changes using the "value" event
+// blogsRef.on("value", (snapshot) => {
+//   const blogsData = snapshot.val();
+//   console.log("blogsData:", blogsData); // Log the blogsData object
+//   if (blogsData) {
+//   // Convert the object into an array of values
+//   const blogPosts = Object.values(blogsData);
+
+//   // Clear previous content
+//   blogPostsElement.innerHTML = "";
+
+//   // Render blog posts
+//   blogPosts.forEach((post) => {
+//     const blogDiv = document.createElement("div");
+//     blogDiv.classList.add("blog");
+
+//     blogDiv.innerHTML = `
+//       <div class="div-post">
+//         <h3>${post.title}</h3>
+//         <p><em><b>${username} - ${post.date}</b></em></p>
+//         <p>${post.body}</p>
+        
+        
+//         <button class="deleteBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Delete</button>
+//         <button class="updateBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Edit</button>
+//         </div>`;
+//     blogPostsElement.appendChild(blogDiv);
+
+//     const deleteBtn = blogDiv.querySelector(".deleteBtn");
+//     deleteBtn.addEventListener("click", () => {
+        
+//       const confirmDelete = confirm(
+//         "Are you sure you want to delete this blog?"
+//       );
+//       if (confirmDelete) {
+        
+//         alert("BLOG DELETED");
+//       }
+//     });
+
+//     const updateBtn = blogDiv.querySelector(".updateBtn");
+//     updateBtn.addEventListener("click", () => {
+//       // Update logic here
+//       alert("Update button clicked");
+//     });
+//   });
+// } else {
+//     // Handle the case where blogsData is null or undefined
+//     console.warn("No blog data found.");
+//     blogPostsElement.innerHTML = "No blog data found.";
+//   }
+// });
 
 // Listen for data changes using the "value" event
-blogsRef.on("value", (snapshot) => {
+blogsRef.on("value", async (snapshot) => {
   const blogsData = snapshot.val();
   console.log("blogsData:", blogsData); // Log the blogsData object
   if (blogsData) {
-  // Convert the object into an array of values
-  const blogPosts = Object.values(blogsData);
+    // Convert the object into an array of values
+    const blogPosts = Object.values(blogsData);
 
-  // Clear previous content
-  blogPostsElement.innerHTML = "";
+    // Clear previous content
+    blogPostsElement.innerHTML = "";
 
-  // Render blog posts
-  blogPosts.forEach((post) => {
-    const blogDiv = document.createElement("div");
-    blogDiv.classList.add("blog");
-    
-    blogDiv.innerHTML = `
-      <div class="div-post">
-        <h3>${post.title}</h3>
-        <p><em><b>${userElement.getAttribute("data-username")} - ${post.date}</b></em></p>
-        <p>${post.body}</p>
-        
-        
-        <button class="deleteBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Delete</button>
-        <button class="updateBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Edit</button>
+    // Render blog posts
+    for (const post of blogPosts) {
+      const blogDiv = document.createElement("div");
+      blogDiv.classList.add("blog");
+
+      // Retrieve the user's name from the database
+      const userId = post.userId; // Assuming you have a userId in your post data
+      const usernameSnapshot = await database.ref(`users/${userId}/username`).once('value');
+      const username = usernameSnapshot.val();
+
+      blogDiv.innerHTML = `
+        <div class="div-post">
+          <h3>${post.title}</h3>
+          <p><em><b>${post.date}</b></em></p>
+          <p>${post.body}</p>
+
+          <button class="deleteBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Delete</button>
+          <button class="updateBtn" style="color:purple; border:none;background-color: transparent;cursor:pointer;">Edit</button>
         </div>`;
-    blogPostsElement.appendChild(blogDiv);
+      blogPostsElement.appendChild(blogDiv);
 
-    const deleteBtn = blogDiv.querySelector(".deleteBtn");
-    deleteBtn.addEventListener("click", () => {
-        
-      const confirmDelete = confirm(
-        "Are you sure you want to delete this blog?"
-      );
-      if (confirmDelete) {
-        
-        alert("BLOG DELETED");
-      }
-    });
+      const deleteBtn = blogDiv.querySelector(".deleteBtn");
+      deleteBtn.addEventListener("click", () => {
+        const confirmDelete = confirm("Are you sure you want to delete this blog?");
+        if (confirmDelete) {
+          alert("BLOG DELETED");
+        }
+      });
 
-    const updateBtn = blogDiv.querySelector(".updateBtn");
-    updateBtn.addEventListener("click", () => {
-      // Update logic here
-      alert("Update button clicked");
-    });
-  });
-} else {
+      const updateBtn = blogDiv.querySelector(".updateBtn");
+      updateBtn.addEventListener("click", () => {
+        // Update logic here
+        alert("Update button clicked");
+      });
+    }
+  } else {
     // Handle the case where blogsData is null or undefined
     console.warn("No blog data found.");
     blogPostsElement.innerHTML = "No blog data found.";
   }
 });
-
 
 // Submit blog form
 blogForm.addEventListener("submit", async (event) => {
@@ -74,10 +145,12 @@ blogForm.addEventListener("submit", async (event) => {
   const blogBody = document.getElementById("blogBody").value;
   const currentDate = new Date().toISOString().split("T")[0];
 
+
   const newBlogPost = {
     title: blogTitle,
     body: blogBody,
     date: currentDate,
+    
   };
 
   try {
@@ -96,7 +169,8 @@ blogForm.addEventListener("submit", async (event) => {
 
 
 // let stored = sessionStorage.getItem('userName');/
-let storedUsername = sessionStorage.getItem('user')
+let storedUsername = sessionStorage.getItem('user');
+
 console.log('storedUsername', storedUsername);
 let userElement = document.getElementById('username');
 // userElement.innerHTML = JSON.parse(storedUsername).username;
