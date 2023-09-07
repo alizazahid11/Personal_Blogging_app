@@ -3,9 +3,9 @@ function isAuthenticated() {
     return user !== null;
 }
 
-// Check if the user is authenticated
+
 if (!isAuthenticated()) {
-    window.location.href = './salessignin.html' ;
+    window.location.href = './login.html' ;
 }
 
 const logout = () => {
