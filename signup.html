@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" type="image" href="https://iconsplace.com/wp-content/uploads/_icons/800080/256/png/letter-p-icon-13-256.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <title>Personal Blogging App</title>
 <style>
@@ -147,6 +148,15 @@ var signup = () => {
     let password = document.getElementById('password').value;
     let repeatpass = document.getElementById('repeatpass').value;
     let role = 'User';
+    document.addEventListener("DOMContentLoaded", function() {
+    // Check if passwords match
+     if (password !== repeatpass) {
+      alert("passwords donot match")
+        return; // Prevent further execution
+    } else {
+        // Clear any previous error message
+       
+    }});
 
     console.log(email, password);
     firebase.auth().createUserWithEmailAndPassword(email, password)

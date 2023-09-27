@@ -4,38 +4,6 @@ const app = firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const database = firebase.database(); // Reference to Firebase Realtime Database
 
-
-// // Check user's sign-in status on page load
-// firebase.auth().onAuthStateChanged((user) => {
-//   if (user) {
-//     // User is signed in, you can now update their password or perform other actions
-//     // Load the user's name from the database and update the profile name element
-//     const userId = user.uid;
-//     const profileNameElement = document.getElementById('profile-name');
-//     const profilePictureElement = document.getElementById('profile-picture'); // Assuming you have an image element for displaying the profile picture
-//     // Retrieve the user's name from the database
-//     database.ref(`users/${userId}/username`).once('value')
-//       .then((snapshot) => {
-//         const username = snapshot.val();
-//         if (username) {
-//           // Update the displayed name
-//           profileNameElement.textContent = username;
-//         }
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching username: " + error.message);
-//       });
-//   } 
-//   const profilePictureURL = sessionStorage.getItem('profilePictureURL');
-//   if (profilePictureURL) {
-//     // Display the profile picture
-//     profilePictureElement.src = profilePictureURL;
-//   }
-// }
-//   else {
-//     // User is not signed in, handle this case accordingly
-//   }
-// });
 // Check user's sign-in status on page load
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
@@ -240,7 +208,9 @@ const updatePasswordButton = document.querySelector(".update-button");
 
 updatePasswordButton.addEventListener("click", async () => {
   // Get the new password input value
-  const newPassword = document.querySelector("input[type='password'][placeholder='New Password']").value;
+  // const newPassword = document.querySelector("input[type='password'][placeholder='New Password']").value;
+  const newPasswordInput = document.querySelector("input[type='password'][placeholder='New Password']");
+  const newPassword = newPasswordInput.value;
 
   // Check if the user is signed in
   const user = firebase.auth().currentUser;
@@ -257,6 +227,10 @@ updatePasswordButton.addEventListener("click", async () => {
         // Add other user information here if needed
       });
 
+  // Clear the input fields after a successful update
+  newPasswordInput.value = "";
+  document.querySelector("input[type='password'][placeholder='Old Password']").value = "";
+  document.querySelector("input[type='password'][placeholder='Repeat Password']").value = "";
       alert("Password updated successfully!");
     } catch (error) {
       alert("Error updating password: " + error.message);
@@ -265,3 +239,4 @@ updatePasswordButton.addEventListener("click", async () => {
     alert("User is not signed in.");
   }
 });
+
